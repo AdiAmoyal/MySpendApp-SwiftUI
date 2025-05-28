@@ -19,12 +19,14 @@ struct OnboardingSetupView: View {
             Spacer()
             
             if let selectedCurrency {
-                ctaButton
+                ctaButton(currency: selectedCurrency)
+                    .transition(.move(edge: .bottom))
             }
 
         }
         .padding(24)
         .animation(.bouncy, value: selectedCurrency)
+        .toolbar(.hidden, for: .navigationBar)
     }
     
     private var title: some View {
@@ -55,29 +57,28 @@ struct OnboardingSetupView: View {
         }
     }
     
-    private var ctaButton: some View {
+    private func ctaButton(currency: Currency) -> some View {
         NavigationLink {
-            OnboardingCompletedView()
+            OnboardingCompletedView(currency: currency)
         } label: {
             Text("Continue")
                 .callToActionButton()
         }
-        .transition(.move(edge: .bottom))
     }
+}
+
+enum Currency: String, CaseIterable {
+    case usd = "USD"
+    case eur = "EUR"
+    case ils = "ILS"
+    case gbp = "GBP"
     
-    enum Currency: String, CaseIterable {
-        case usd = "USD"
-        case eur = "EUR"
-        case ils = "ILS"
-        case gbp = "GBP"
-        
-        var symbol: String {
-            switch self {
-            case .usd: return "$"
-            case .eur: return "€"
-            case .ils: return "₪"
-            case .gbp: return "£"
-            }
+    var symbol: String {
+        switch self {
+        case .usd: return "$"
+        case .eur: return "€"
+        case .ils: return "₪"
+        case .gbp: return "£"
         }
     }
 }

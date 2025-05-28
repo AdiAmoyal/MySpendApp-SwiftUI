@@ -11,28 +11,60 @@ struct OnboardingCompletedView: View {
     
     @Environment(AppState.self) private var root
     
+    var currency: Currency
+    
+    @State private var isCompletiongProfileSetup: Bool = false
+    
     var body: some View {
-        VStack {
-            Text("Onboarding Completed")
-                .frame(maxHeight: .infinity)
+        VStack(alignment: .leading, spacing: 8) {
+            Text("You're All Set!")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .foregroundStyle(.accent)
             
-            Button {
-                onFinishButtonPressed()
-            } label: {
-                Text("Finish")
-                    .callToActionButton()
+            Text("You can now start tracking your expenses with MySpend.")
+                .font(.title2)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxHeight: .infinity)
+        .safeAreaInset(edge: .bottom, content: {
+            ctaButton
+        })
+        .padding(24)
+        .toolbar(.hidden, for: .navigationBar)
+    }
+    
+    private var ctaButton: some View {
+        Button {
+            onFinishButtonPressed()
+        } label: {
+            ZStack {
+                if isCompletiongProfileSetup {
+                    ProgressView()
+                        .tint(.white)
+                } else {
+                    Text("Finish")
+                        .callToActionButton()
+                }
             }
         }
-        .padding(16)
+        .disabled(isCompletiongProfileSetup)
     }
     
     func onFinishButtonPressed() {
-        // other logic to complete onboarding
-        root.updateViewState(showTabBarView: true)
+        isCompletiongProfileSetup = true
+        Task {
+            // other logic to complete onboarding
+            try await Task.sleep(for: .seconds(3))
+            isCompletiongProfileSetup = false
+            
+            root.updateViewState(showTabBarView: true)
+        }
     }
 }
 
 #Preview {
-    OnboardingCompletedView()
+    OnboardingCompletedView(currency: .usd)
         .environment(AppState())
 }

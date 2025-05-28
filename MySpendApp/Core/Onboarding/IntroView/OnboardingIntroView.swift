@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct IntroView: View {
+struct OnboardingIntroView: View {
     var body: some View {
         VStack {
             Group {
@@ -36,9 +36,10 @@ struct IntroView: View {
             }
         }
         .padding(24)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
 #Preview {
-    IntroView()
+    OnboardingIntroView()
 }
