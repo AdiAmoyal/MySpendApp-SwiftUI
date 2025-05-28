@@ -16,7 +16,7 @@ struct WelcomeView: View {
                 titleSection
                 Spacer()
                 Spacer()
-                getStartedButton
+                ctaButton
             }
             .padding(16)
         }
@@ -44,9 +44,9 @@ struct WelcomeView: View {
         }
     }
     
-    private var getStartedButton: some View {
+    private var ctaButton: some View {
         NavigationLink {
-            OnboardingCompletedView()
+            IntroView()
         } label: {
             Text("Get Started")
                 .callToActionButton()
