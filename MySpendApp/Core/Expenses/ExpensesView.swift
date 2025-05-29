@@ -29,6 +29,10 @@ struct ExpensesView: View {
                     .padding(16)
                     .padding(.horizontal, 16)
             }
+            .sheet(isPresented: $showCreateExpenseView) {
+                CreateExpenseView()
+                    .presentationDetents([.fraction(0.65)])
+            }
         }
         .task {
             await loadData()
@@ -58,14 +62,15 @@ struct ExpensesView: View {
                     .fontWeight(.light)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(maxHeight: .infinity, alignment: .top)
+                    .padding(.bottom, 24)
                 
                 Text(totalExpenses.convertDoubleToStringWithCurrency(currency: currency))
                     .font(.title)
                     .fontWeight(.semibold)
                     .frame(maxHeight: .infinity, alignment: .top)
+                    .padding(.bottom, 14)
             }
             .padding(18)
-            .frame(width: 330, height: 150)
             .background(
                 LinearGradient(
                     colors: [
