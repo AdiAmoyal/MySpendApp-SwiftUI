@@ -11,7 +11,9 @@ struct ExpensesView: View {
     
     @State private var totalExpenses: Double = 23546.68
     @State private var currency: Currency = .usd
-    @State private var expenses: [ExpenseModel] = ExpenseModel.mockList
+    @State private var expenses: [ExpenseModel] = []
+    @State private var isLoading: Bool = true
+    
     @State private var showCreateExpenseView: Bool = false
     
     var body: some View {
@@ -28,6 +30,15 @@ struct ExpensesView: View {
                     .padding(.horizontal, 16)
             }
         }
+        .task {
+            await loadData()
+        }
+    }
+    
+    private func loadData() async {
+        try? await Task.sleep(for: .seconds(2))
+        isLoading = false
+        expenses = ExpenseModel.mockList
     }
     
     private var welcomeSection: some View {
@@ -76,17 +87,32 @@ struct ExpensesView: View {
     
     private var expensesListSection: some View {
         Section {
-            
-            ForEach(expenses, id: \.self) { expense in
-                ExpenseRowView(
-                    amount: expense.amount.convertDoubleToStringWithCurrency(currency: currency),
-                    category: expense.category.rawValue.localizedUppercase,
-                    description: expense.description,
-                    time: expense.dateCreated.toFormattedString()
-                )
+            if expenses.isEmpty {
+                Group {
+                    if isLoading {
+                        ProgressView()
+                    } else {
+                        Text("Click + to add new expense")
+                    }
+                }
+                .padding(50)
+                .frame(maxWidth: .infinity)
+                .font(.body)
+                .foregroundStyle(.secondary)
                 .removeListRowFormmating()
+                
+            } else {
+                ForEach(expenses, id: \.self) { expense in
+                    ExpenseRowView(
+                        amount: expense.amount.convertDoubleToStringWithCurrency(currency: currency),
+                        category: expense.category.rawValue.localizedUppercase,
+                        description: expense.description,
+                        time: expense.dateCreated.toFormattedString()
+                    )
+                    .removeListRowFormmating()
+                }
+                .onDelete(perform: onDeleteExpense)
             }
-            .onDelete(perform: onDeleteExpense)
         } header: {
             HStack {
                 Text("Recent Expenses")
