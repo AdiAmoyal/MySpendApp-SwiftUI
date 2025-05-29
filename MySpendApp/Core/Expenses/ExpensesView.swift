@@ -12,6 +12,7 @@ struct ExpensesView: View {
     @State private var totalExpenses: Double = 23546.68
     @State private var currency: Currency = .usd
     @State private var expenses: [ExpenseModel] = ExpenseModel.mockList
+    @State private var showCreateExpenseView: Bool = false
     
     var body: some View {
         NavigationStack{
@@ -85,6 +86,7 @@ struct ExpensesView: View {
                 )
                 .removeListRowFormmating()
             }
+            .onDelete(perform: onDeleteExpense)
         } header: {
             HStack {
                 Text("Recent Expenses")
@@ -98,6 +100,11 @@ struct ExpensesView: View {
                 }
             }
         }
+    }
+    
+    private func onDeleteExpense(indexSet: IndexSet) {
+        guard let index = indexSet.first else { return }
+        expenses.remove(at: index)
     }
     
     private var addNewExpenseButton: some View {
@@ -115,7 +122,7 @@ struct ExpensesView: View {
     }
     
     private func onAddNewExpensePressed() {
-        
+        showCreateExpenseView = true
     }
 }
 
