@@ -45,9 +45,9 @@ struct OnboardingCompletedView: View {
                         .tint(.white)
                 } else {
                     Text("Finish")
-                        .callToActionButton()
                 }
             }
+            .callToActionButton()
         }
         .disabled(isCompletiongProfileSetup)
     }
@@ -56,7 +56,7 @@ struct OnboardingCompletedView: View {
         isCompletiongProfileSetup = true
         Task {
             // other logic to complete onboarding
-            try await Task.sleep(for: .seconds(3))
+            try await Task.sleep(for: .seconds(2))
             isCompletiongProfileSetup = false
             
             root.updateViewState(showTabBarView: true)
